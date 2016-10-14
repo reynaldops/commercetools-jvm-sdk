@@ -22,6 +22,10 @@ import io.sphere.sdk.models.AddressBuilder;
 import io.sphere.sdk.models.LocalizedString;
 import io.sphere.sdk.orders.Order;
 import io.sphere.sdk.orders.commands.OrderDeleteCommand;
+import io.sphere.sdk.productdiscounts.AbsoluteProductDiscountValue;
+import io.sphere.sdk.productdiscounts.ProductDiscountDraft;
+import io.sphere.sdk.productdiscounts.ProductDiscountPredicate;
+import io.sphere.sdk.productdiscounts.ProductDiscountValue;
 import io.sphere.sdk.products.Product;
 import io.sphere.sdk.utils.MoneyImpl;
 
@@ -30,6 +34,7 @@ import java.util.function.*;
 
 import static io.sphere.sdk.customers.CustomerFixtures.withCustomer;
 import static io.sphere.sdk.customers.CustomerFixtures.withCustomerAndCart;
+import static io.sphere.sdk.productdiscounts.ProductDiscountFixtures.withProductDiscount;
 import static io.sphere.sdk.products.ProductFixtures.withTaxedProduct;
 import static io.sphere.sdk.test.SphereTestUtils.*;
 import static java.lang.String.format;
@@ -92,7 +97,7 @@ public class CartFixtures {
     }
 
     public static void withFilledCart(final BlockingSphereClient client, final Consumer<Cart> f) {
-        withTaxedProduct(client,  product -> {
+        withTaxedProduct(client, product -> {
             final Cart cart = createCartWithShippingAddress(client);
             assertThat(cart.getLineItems()).hasSize(0);
             final long quantity = 3;
@@ -153,6 +158,35 @@ public class CartFixtures {
             final Cart cartToDelete = op.apply(updatedCart);
             client.executeBlocking(CartDeleteCommand.of(cartToDelete));
         });
+    }
+
+    public static void withDiscountedLineItem(final BlockingSphereClient client, final UnaryOperator<Cart> op) {
+        withTaxedProduct(client, product -> {
+            final ProductDiscountDraft productDiscountDraft = discountDraftOfAbsoluteValue(product, EURO_5);
+            withProductDiscount(client, productDiscountDraft, productDiscount -> {
+                final Cart cart = createCartWithShippingAddress(client);
+                assertThat(cart.getLineItems()).hasSize(0);
+
+                final long quantity = 3;
+                final String productId = product.getId();
+                final AddLineItem addLineItemAction = AddLineItem.of(productId, 1, quantity);
+
+                final Cart updatedCart = client.executeBlocking(CartUpdateCommand.of(cart, asList(addLineItemAction)));
+                assertThat(updatedCart.getLineItems()).hasSize(1);
+                final LineItem lineItem = updatedCart.getLineItems().get(0);
+                assertThat(lineItem.getName()).isEqualTo(product.getMasterData().getStaged().getName());
+                assertThat(lineItem.getQuantity()).isEqualTo(quantity);
+                final Cart cartToDelete = op.apply(updatedCart);
+                client.executeBlocking(CartDeleteCommand.of(cartToDelete));
+            });
+        });
+    }
+
+    private static ProductDiscountDraft discountDraftOfAbsoluteValue(final Product product, final MonetaryAmount amount) {
+        final AbsoluteProductDiscountValue value = ProductDiscountValue.ofAbsolute(amount);
+        final ProductDiscountPredicate predicate =
+                ProductDiscountPredicate.of("product.id = \"" + product.getId() + "\"");
+        return ProductDiscountDraft.of(randomSlug(), randomSlug(), predicate, value, randomSortOrder(), true);
     }
 
     public static void withCartAndDiscountCode(final BlockingSphereClient client, final BiFunction<Cart, DiscountCode, Cart> user) {
