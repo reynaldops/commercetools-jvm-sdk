@@ -1,5 +1,8 @@
 package io.sphere.sdk.carts.queries;
 
+import io.sphere.sdk.cartdiscounts.CartDiscount;
+import io.sphere.sdk.cartdiscounts.CartDiscountValue;
+import io.sphere.sdk.cartdiscounts.RelativeCartDiscountValue;
 import io.sphere.sdk.carts.*;
 import io.sphere.sdk.carts.commands.CartCreateCommand;
 import io.sphere.sdk.carts.commands.CartUpdateCommand;
@@ -7,8 +10,8 @@ import io.sphere.sdk.carts.commands.updateactions.AddDiscountCode;
 import io.sphere.sdk.carts.commands.updateactions.RemoveDiscountCode;
 import io.sphere.sdk.carts.commands.updateactions.SetShippingMethod;
 import io.sphere.sdk.discountcodes.DiscountCodeInfo;
+import io.sphere.sdk.models.Reference;
 import io.sphere.sdk.orders.OrderFixtures;
-import io.sphere.sdk.productdiscounts.ProductDiscount;
 import io.sphere.sdk.products.Price;
 import io.sphere.sdk.queries.PagedQueryResult;
 import io.sphere.sdk.test.IntegrationTest;
@@ -25,7 +28,6 @@ import static io.sphere.sdk.carts.CartFixtures.*;
 import static io.sphere.sdk.customers.CustomerFixtures.withCustomerAndCart;
 import static io.sphere.sdk.shippingmethods.ShippingMethodFixtures.withShippingMethodForGermany;
 import static io.sphere.sdk.test.SphereTestUtils.*;
-import static io.sphere.sdk.test.SphereTestUtils.assertEventually;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @NotThreadSafe
@@ -61,18 +63,42 @@ public class CartQueryIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    public void expandLineItemsAndDiscount() throws Exception {
-        withDiscountedLineItem(client(), (cart) -> {
+    public void expandLineItemsDiscount() throws Exception {
+        final RelativeCartDiscountValue relativeCartDiscountValue = RelativeCartDiscountValue.of(15000);
+        withDiscountedLineItem(client(), relativeCartDiscountValue, (cart) -> {
             final CartQuery query = CartQuery.of()
                     .withPredicates(m -> m.id().is(cart.getId()))
-                    .withExpansionPaths(m -> m.lineItems().variant().prices().discounted().discount());
-
+                    .withExpansionPaths(m -> m.lineItems().discountedPricePerQuantity().discountedPrice().includedDiscounts().discount());
             assertEventually(() -> {
                 final Cart loadedCart = client().executeBlocking(query).head().get();
-                final ProductDiscount discount = loadedCart.getLineItems().get(0).getVariant().getPrices().get(0).getDiscounted().getDiscount().getObj();
-                assertThat(discount).isNotNull();
+                final Reference<CartDiscount> cartDiscountReference =
+                        loadedCart.getLineItems().get(0).getDiscountedPricePerQuantity().get(0).getDiscountedPrice().getIncludedDiscounts().get(0).getDiscount();
+                assertThat(cartDiscountReference.getObj()).isNotNull();
+                final CartDiscount lineItemDiscount = cartDiscountReference.getObj();
+                assertThat(lineItemDiscount).isNotNull();
+                final CartDiscountValue customLineItemDiscountValue = lineItemDiscount.getValue();
+                assertThat(customLineItemDiscountValue).isEqualTo(relativeCartDiscountValue);
             });
-            return cart;
+        });
+    }
+
+    @Test
+    public void expandCustomLineItemsDiscount() throws Exception {
+        final RelativeCartDiscountValue relativeCartDiscountValue = RelativeCartDiscountValue.of(10000);
+        withDiscountedCustomLineItem(client(), relativeCartDiscountValue, (cart) -> {
+            final CartQuery query = CartQuery.of()
+                    .withPredicates(m -> m.id().is(cart.getId()))
+                    .withExpansionPaths(m -> m.customLineItems().discountedPricePerQuantity().discountedPrice().includedDiscounts().discount());
+            assertEventually(() -> {
+                final Cart loadedCart = client().executeBlocking(query).head().get();
+                final Reference<CartDiscount> cartDiscountReference =
+                        loadedCart.getCustomLineItems().get(0).getDiscountedPricePerQuantity().get(0).getDiscountedPrice().getIncludedDiscounts().get(0).getDiscount();
+                assertThat(cartDiscountReference.getObj()).isNotNull();
+                final CartDiscount customLineItemDiscount = cartDiscountReference.getObj();
+                assertThat(customLineItemDiscount).isNotNull();
+                final CartDiscountValue customLineItemDiscountValue = customLineItemDiscount.getValue();
+                assertThat(customLineItemDiscountValue).isEqualTo(relativeCartDiscountValue);
+            });
         });
     }
 

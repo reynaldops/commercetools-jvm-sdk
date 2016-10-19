@@ -37,7 +37,21 @@ final class LineItemExpansionModelImpl<T> extends ExpansionModelImpl<T> implemen
         return ProductVariantExpansionModel.of(buildPathExpression(), "variant");
     }
 
+    @Override
+    public DiscountedLineItemPricePerQuantityExpansionModel<T> discountedPricePerQuantity() {
+        return discountedPricePerQuantity("*");
+    }
+
+    @Override
+    public DiscountedLineItemPricePerQuantityExpansionModel<T> discountedPricePerQuantity(final int index) {
+        return discountedPricePerQuantity("" + index);
+    }
+
     private ItemStateExpansionModel<T> state(final String s) {
         return new ItemStateExpansionModelImpl<>(pathExpression(), "state[" + s + "]");
+    }
+
+    private DiscountedLineItemPricePerQuantityExpansionModel<T> discountedPricePerQuantity(final String s) {
+        return new DiscountedLineItemPricePerQuantityExpansionModelImpl<>(pathExpression(), "discountedPricePerQuantity[" + s + "]");
     }
 }

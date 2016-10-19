@@ -1,7 +1,6 @@
 package io.sphere.sdk.carts.expansion;
 
 import io.sphere.sdk.channels.expansion.ChannelExpansionModel;
-import io.sphere.sdk.products.ProductVariant;
 import io.sphere.sdk.products.expansion.ProductVariantExpansionModel;
 
 public interface LineItemExpansionModel<T> {
@@ -14,4 +13,8 @@ public interface LineItemExpansionModel<T> {
     ItemStateExpansionModel<T> state(int index);
 
     ProductVariantExpansionModel<T> variant();
+
+    DiscountedLineItemPricePerQuantityExpansionModel<T> discountedPricePerQuantity();
+
+    DiscountedLineItemPricePerQuantityExpansionModel<T> discountedPricePerQuantity(int index);
 }
