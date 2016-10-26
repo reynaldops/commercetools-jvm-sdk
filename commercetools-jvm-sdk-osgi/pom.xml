@@ -10,37 +10,50 @@
     <version>1.6.1-SNAPSHOT</version>
     <dependencies>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.asynchttpclient</groupId>
-            <artifactId>async-http-client</artifactId>
-            <version>${asynchttpclient20.version}</version>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpasyncclient-osgi</artifactId>
+            <version>4.1.1</version>
             <exclusions>
                 <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>io.netty</groupId>
-                    <artifactId>netty-handler</artifactId>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>httpcore-osgi</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-handler</artifactId>
-            <version>4.0.36.Final</version>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.4</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient-osgi</artifactId>
+            <version>4.5.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore-osgi</artifactId>
+            <version>4.4.4</version>
         </dependency>
         <dependency>
             <groupId>org.javamoney</groupId>
             <artifactId>moneta</artifactId>
             <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
         </dependency>
         <dependency>
             <groupId>com.neovisionaries</groupId>
@@ -109,7 +122,7 @@
                 <configuration>
                     <instructions>
                         <Export-Package>io.sphere.sdk.*</Export-Package>
-                        <Import-Package>!org.asynchttpclient,!javax.activation,!javax.crypto,!javax.crypto.spec,!javax.net.ssl,!javax.security.auth.x500,!javax.security.cert,!javax.xml.parsers,!org.apache.commons.lang3.builder,!org.ietf.jgss,!org.reactivestreams,!org.w3c.dom,!org.xml.sax,!sun.security.util,!sun.security.x509,!io.netty.*,!com.typesafe.netty,!org.apache.tomcat.jni,!org.bouncycastle.asn1.x500,!org.bouncycastle.cert,!org.bouncycastle.cert.jcajce,!org.bouncycastle.jce.provider,!org.bouncycastle.operator,!org.bouncycastle.operator.jcajce,!org.eclipse.jetty.alpn,!org.eclipse.jetty.npn,!org.slf4j.*,*</Import-Package>
+                        <Import-Package>!net.sf.ehcache,!net.spy.memcached,!org.apache.commons.*,!org.apache.http.*,!org.apache.avalon.framework.logger,!org.apache.log,!javax.activation,!javax.crypto,!javax.crypto.spec,!javax.security.auth.x500,!javax.security.cert,!javax.xml.parsers,!org.apache.commons.lang3.builder,!org.ietf.jgss,!org.reactivestreams,!org.w3c.dom,!org.xml.sax,!sun.security.util,!sun.security.x509,!io.netty.*,!com.typesafe.netty,!org.apache.tomcat.jni,!org.bouncycastle.asn1.x500,!org.bouncycastle.cert,!org.bouncycastle.cert.jcajce,!org.bouncycastle.jce.provider,!org.bouncycastle.operator,!org.bouncycastle.operator.jcajce,!org.eclipse.jetty.alpn,!org.eclipse.jetty.npn,*</Import-Package>
                         <Embed-Dependency>!org.slf4j.*,!slf4j-api,*;scope=compile|runtime</Embed-Dependency>
                     </instructions>
                 </configuration>
