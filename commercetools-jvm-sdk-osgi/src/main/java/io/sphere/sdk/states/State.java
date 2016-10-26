@@ -1,0 +1,101 @@
+package io.sphere.sdk.states;
+
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.sphere.sdk.carts.ItemState;
+import io.sphere.sdk.models.LocalizedString;
+import io.sphere.sdk.models.Resource;
+import io.sphere.sdk.models.Reference;
+import io.sphere.sdk.models.WithKey;
+
+import javax.annotation.Nullable;
+import java.util.Set;
+
+/** A State represents a state of a particular resource (defines a finite state machine). States can be combined together
+    by defining transitions between each state, thus allowing to create work-flows.
+    Each project has by default an initial LineItemState (inherited also by custom Line Items)
+
+ @see io.sphere.sdk.states.commands.StateCreateCommand
+ @see io.sphere.sdk.states.commands.StateUpdateCommand
+ @see io.sphere.sdk.states.commands.StateDeleteCommand
+ @see io.sphere.sdk.states.queries.StateQuery
+ @see io.sphere.sdk.states.queries.StateByIdGet
+ @see ItemState#getState()
+ @see io.sphere.sdk.orders.Order#getState()
+ @see io.sphere.sdk.payments.PaymentStatus#getState()
+ @see io.sphere.sdk.products.Product#getState()
+ @see io.sphere.sdk.reviews.Review#getState()
+ */
+@JsonDeserialize(as = StateImpl.class)
+public interface State extends Resource<State>, WithKey {
+
+    String getKey();
+
+    StateType getType();
+
+    @Nullable
+    LocalizedString getName();
+
+    @Nullable
+    LocalizedString getDescription();
+
+    Boolean isInitial();
+
+    Boolean isBuiltIn();
+
+    @Nullable
+    Set<Reference<State>> getTransitions();
+
+    @Nullable
+    Set<StateRole> getRoles();
+
+    default Reference<State> toReference() {
+        return Reference.of(referenceTypeId(), getId(), this);
+    }
+
+    /**
+     * A type hint for references which resource type is linked in a reference.
+     * @see Reference#getTypeId()
+     * @return type hint
+     */
+    static String referenceTypeId() {
+        return "state";
+    }
+
+    /**
+     * Creates a container which contains the full Java type information to deserialize this class from JSON.
+     *
+     * @see io.sphere.sdk.json.SphereJsonUtils#readObject(byte[], TypeReference)
+     * @see io.sphere.sdk.json.SphereJsonUtils#readObject(String, TypeReference)
+     * @see io.sphere.sdk.json.SphereJsonUtils#readObject(com.fasterxml.jackson.databind.JsonNode, TypeReference)
+     * @see io.sphere.sdk.json.SphereJsonUtils#readObjectFromResource(String, TypeReference)
+     *
+     * @return type reference
+     */
+    static TypeReference<State> typeReference() {
+        return new TypeReference<State>() {
+            @Override
+            public String toString() {
+                return "TypeReference<State>";
+            }
+        };
+    }
+
+    /**
+     * Creates a reference for one item of this class by a known ID.
+     *
+     * <p>An example for categories but this applies for other resources, too:</p>
+     * {@include.example io.sphere.sdk.categories.CategoryTest#referenceOfId()}
+     *
+     * <p>If you already have a resource object, then use {@link #toReference()} instead:</p>
+     *
+     * {@include.example io.sphere.sdk.categories.CategoryTest#toReference()}
+     *
+     * @param id the ID of the resource which should be referenced.
+     * @return reference
+     */
+    static Reference<State> referenceOfId(final String id) {
+        return Reference.of(referenceTypeId(), id);
+    }
+}
