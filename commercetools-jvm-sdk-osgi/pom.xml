@@ -10,6 +10,11 @@
     <version>1.6.1-SNAPSHOT</version>
     <dependencies>
         <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpasyncclient-osgi</artifactId>
             <version>4.1.1</version>
@@ -119,14 +124,43 @@
                 <artifactId>maven-bundle-plugin</artifactId>
                 <version>${maven-bundle-plugin.version}</version>
                 <extensions>true</extensions>
+
                 <configuration>
                     <instructions>
+                        <!--net.sf.ehcache-->
                         <Export-Package>io.sphere.sdk.*</Export-Package>
-                        <Import-Package>!net.sf.ehcache,!net.spy.memcached,!org.apache.commons.*,!org.apache.http.*,!org.apache.avalon.framework.logger,!org.apache.log,!javax.activation,!javax.crypto,!javax.crypto.spec,!javax.security.auth.x500,!javax.security.cert,!javax.xml.parsers,!org.apache.commons.lang3.builder,!org.ietf.jgss,!org.reactivestreams,!org.w3c.dom,!org.xml.sax,!sun.security.util,!sun.security.x509,!io.netty.*,!com.typesafe.netty,!org.apache.tomcat.jni,!org.bouncycastle.asn1.x500,!org.bouncycastle.cert,!org.bouncycastle.cert.jcajce,!org.bouncycastle.jce.provider,!org.bouncycastle.operator,!org.bouncycastle.operator.jcajce,!org.eclipse.jetty.alpn,!org.eclipse.jetty.npn,*</Import-Package>
-                        <Embed-Dependency>!org.slf4j.*,!slf4j-api,*;scope=compile|runtime</Embed-Dependency>
+                        <!--<Import-Package>javax.money.*,org.javamoney.moneta.*,org.slf4j.*,com.neovisionaries.i18n.*,org.apache.commons.lang3.*,javax.net.ssl;resolution:=optional</Import-Package>-->
+                        <!--<Import-Package>*</Import-Package>-->
+                        <Embed-Dependency>httpasyncclient-osgi,httpclient-osgi,httpcore-osgi,commons-logging,jackson-annotations,jackson-core,jackson-databind,jackson-module-parameter-names,jackson-datatype-jsr310,jsr305</Embed-Dependency>
+                        <Import-Package>!net.sf.ehcache,!net.spy.memcached,!org.apache.avalon.framework.logger,!org.apache.log,*</Import-Package>
+                        <!--<Embed-Dependency>!org.javamoney!javax.money.*,!org.javamoney.moneta.*,!org.slf4j.*,!slf4j-api,*;scope=compile|runtime</Embed-Dependency>-->
                     </instructions>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <!-- Development profile: install only the bundle -->
+        <profile>
+            <id>autoInstallBundle</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.sling</groupId>
+                        <artifactId>maven-sling-plugin</artifactId>
+                        <configuration>
+                            <!-- Note that this requires /apps/commercetools/install to exist!!          -->
+                            <!--    This is typically the case when ui.apps is deployed first                -->
+                            <!--    Otherwise, create /apps/commercetools/install manually (CRXDE|Lite)  -->
+                            <slingUrlSuffix>/apps/commercetools/install/</slingUrlSuffix>
+                            <failOnError>true</failOnError>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
