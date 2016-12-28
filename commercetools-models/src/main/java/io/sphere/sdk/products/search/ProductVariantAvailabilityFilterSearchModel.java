@@ -1,7 +1,6 @@
 package io.sphere.sdk.products.search;
 
-import io.sphere.sdk.search.model.RangeTermFilterSearchModel;
-import io.sphere.sdk.search.model.TermFilterSearchModel;
+import io.sphere.sdk.search.model.*;
 
 import java.math.BigDecimal;
 
@@ -14,4 +13,7 @@ public interface ProductVariantAvailabilityFilterSearchModel<T> extends ProductV
     RangeTermFilterSearchModel<T, BigDecimal> availableQuantity();
 
     ChannelsProductVariantAvailabilityFilterSearchModel<T> channels();
+
+    FilterSearchModel<T, String> isOnStockInChannels();
+    // TODO A method like this, through channels() or a method that accepts only channel IDs?
 }

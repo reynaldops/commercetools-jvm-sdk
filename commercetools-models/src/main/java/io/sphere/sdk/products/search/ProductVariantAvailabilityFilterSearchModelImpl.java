@@ -1,9 +1,6 @@
 package io.sphere.sdk.products.search;
 
-import io.sphere.sdk.search.model.RangeTermFilterSearchModel;
-import io.sphere.sdk.search.model.SearchModel;
-import io.sphere.sdk.search.model.SearchModelImpl;
-import io.sphere.sdk.search.model.TermFilterSearchModel;
+import io.sphere.sdk.search.model.*;
 
 import javax.annotation.Nullable;
 import java.math.BigDecimal;
@@ -27,5 +24,10 @@ final class ProductVariantAvailabilityFilterSearchModelImpl<T> extends SearchMod
     @Override
     public ChannelsProductVariantAvailabilityFilterSearchModel<T> channels() {
         return new ChannelsProductVariantAvailabilityFilterSearchModelImpl<>(this, "channels");
+    }
+
+    @Override
+    public FilterSearchModel<T, String> isOnStockInChannels() {
+        return stringSearchModel("isOnStockInChannels").filtered();
     }
 }
