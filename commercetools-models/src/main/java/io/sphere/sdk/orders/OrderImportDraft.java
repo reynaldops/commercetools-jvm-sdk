@@ -8,6 +8,7 @@ import io.sphere.sdk.carts.TaxedPrice;
 import io.sphere.sdk.customergroups.CustomerGroup;
 import io.sphere.sdk.models.Address;
 import io.sphere.sdk.models.Reference;
+import io.sphere.sdk.types.CustomFieldsDraft;
 
 import javax.annotation.Nullable;
 import javax.money.MonetaryAmount;
@@ -70,4 +71,7 @@ public interface OrderImportDraft {
 
     @Nullable
     InventoryMode getInventoryMode();
+
+    @Nullable
+    CustomFieldsDraft getCustom();
 }

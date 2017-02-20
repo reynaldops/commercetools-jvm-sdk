@@ -8,6 +8,7 @@ import io.sphere.sdk.customergroups.CustomerGroup;
 import io.sphere.sdk.models.Address;
 import io.sphere.sdk.models.Base;
 import io.sphere.sdk.models.Reference;
+import io.sphere.sdk.types.CustomFieldsDraft;
 
 import javax.annotation.Nullable;
 import javax.money.MonetaryAmount;
@@ -47,8 +48,11 @@ final class OrderImportDraftImpl extends Base implements OrderImportDraft {
     private final RoundingMode taxRoundingMode;
     @Nullable
     private final InventoryMode inventoryMode;
+    @Nullable
+    private final CustomFieldsDraft custom;
 
-    public OrderImportDraftImpl(@Nullable final Address billingAddress, @Nullable final String orderNumber, @Nullable final String customerId, @Nullable final String customerEmail, final List<LineItemImportDraft> lineItems, final List<CustomLineItemImportDraft> customLineItems, final MonetaryAmount totalPrice, @Nullable final TaxedPrice taxedPrice, @Nullable final Address shippingAddress, @Nullable final Reference<CustomerGroup> customerGroup, @Nullable final CountryCode country, final OrderState orderState, @Nullable final ShipmentState shipmentState, @Nullable final PaymentState paymentState, @Nullable final OrderShippingInfo shippingInfo, @Nullable final ZonedDateTime completedAt, @Nullable final RoundingMode taxRoundingMode, @Nullable final InventoryMode inventoryMode) {
+
+    public OrderImportDraftImpl(@Nullable final Address billingAddress, @Nullable final String orderNumber, @Nullable final String customerId, @Nullable final String customerEmail, final List<LineItemImportDraft> lineItems, final List<CustomLineItemImportDraft> customLineItems, final MonetaryAmount totalPrice, @Nullable final TaxedPrice taxedPrice, @Nullable final Address shippingAddress, @Nullable final Reference<CustomerGroup> customerGroup, @Nullable final CountryCode country, final OrderState orderState, @Nullable final ShipmentState shipmentState, @Nullable final PaymentState paymentState, @Nullable final OrderShippingInfo shippingInfo, @Nullable final ZonedDateTime completedAt, @Nullable final RoundingMode taxRoundingMode, @Nullable final InventoryMode inventoryMode, @Nullable final CustomFieldsDraft custom) {
         this.billingAddress = billingAddress;
         this.orderNumber = orderNumber;
         this.customerId = customerId;
@@ -67,6 +71,7 @@ final class OrderImportDraftImpl extends Base implements OrderImportDraft {
         this.completedAt = completedAt;
         this.taxRoundingMode = taxRoundingMode;
         this.inventoryMode = inventoryMode;
+        this.custom = custom;
     }
 
     @Override
@@ -171,5 +176,11 @@ final class OrderImportDraftImpl extends Base implements OrderImportDraft {
     @Nullable
     public InventoryMode getInventoryMode() {
         return inventoryMode;
+    }
+
+    @Override
+    @Nullable
+    public CustomFieldsDraft getCustom() {
+        return custom;
     }
 }

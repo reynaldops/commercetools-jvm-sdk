@@ -6,6 +6,7 @@ import io.sphere.sdk.carts.RoundingMode;
 import io.sphere.sdk.carts.TaxedPrice;
 import io.sphere.sdk.customergroups.CustomerGroup;
 import io.sphere.sdk.models.*;
+import io.sphere.sdk.types.CustomFieldsDraft;
 
 import javax.annotation.Nullable;
 import javax.money.MonetaryAmount;
@@ -48,6 +49,8 @@ public final class OrderImportDraftBuilder extends Base implements Builder<Order
     private RoundingMode taxRoundingMode;
     @Nullable
     private InventoryMode inventoryMode;
+    @Nullable
+    private CustomFieldsDraft custom;
 
     private OrderImportDraftBuilder(final MonetaryAmount totalPrice, final OrderState orderState) {
         this.totalPrice = totalPrice;
@@ -149,6 +152,12 @@ public final class OrderImportDraftBuilder extends Base implements Builder<Order
         return this;
     }
 
+
+    public OrderImportDraftBuilder custom(@Nullable final CustomFieldsDraft custom) {
+        this.custom = custom;
+        return this;
+    }
+
     /**
      * Creates a builder for {@link OrderImportDraft} with at least one line item.
      * You can add {@link io.sphere.sdk.carts.CustomLineItem}s with {@link #customLineItems(java.util.List)}.
@@ -177,6 +186,6 @@ public final class OrderImportDraftBuilder extends Base implements Builder<Order
 
     @Override
     public OrderImportDraft build() {
-        return new OrderImportDraftImpl(billingAddress, orderNumber, customerId, customerEmail, lineItems, customLineItems, totalPrice, taxedPrice, shippingAddress, customerGroup, country, orderState, shipmentState, paymentState, shippingInfo, completedAt, taxRoundingMode, inventoryMode);
+        return new OrderImportDraftImpl(billingAddress, orderNumber, customerId, customerEmail, lineItems, customLineItems, totalPrice, taxedPrice, shippingAddress, customerGroup, country, orderState, shipmentState, paymentState, shippingInfo, completedAt, taxRoundingMode, inventoryMode, custom);
     }
 }

@@ -19,6 +19,8 @@ import io.sphere.sdk.test.IntegrationTest;
 import io.sphere.sdk.test.JsonNodeReferenceResolver;
 import io.sphere.sdk.test.SphereTestUtils;
 import io.sphere.sdk.types.CustomFields;
+import io.sphere.sdk.types.CustomFieldsDraft;
+import io.sphere.sdk.types.CustomFieldsDraftBuilder;
 import io.sphere.sdk.utils.MoneyImpl;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.junit.Test;
@@ -42,6 +44,8 @@ import static io.sphere.sdk.shippingmethods.ShippingMethodFixtures.withShippingM
 import static io.sphere.sdk.taxcategories.TaxCategoryFixtures.defaultTaxCategory;
 import static io.sphere.sdk.taxcategories.TaxCategoryFixtures.withTransientTaxCategory;
 import static io.sphere.sdk.test.SphereTestUtils.*;
+import static io.sphere.sdk.types.TypeFixtures.STRING_FIELD_NAME;
+import static io.sphere.sdk.types.TypeFixtures.withUpdateableType;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class OrderImportCommandIntegrationTest extends IntegrationTest {
@@ -399,6 +403,19 @@ public class OrderImportCommandIntegrationTest extends IntegrationTest {
         final Address billingAddress = AddressBuilder.of(CountryCode.DE).city(randomString()).build();
         testOrderAspect(builder -> builder.billingAddress(billingAddress),
                 order -> assertThat(order.getBillingAddress()).isEqualTo(billingAddress));
+    }
+
+    @Test
+    public void custom() throws Exception {
+        withUpdateableType(client(), type -> {
+            final String stringValue = "a value";
+            final CustomFieldsDraft customFieldsDraft = CustomFieldsDraftBuilder.ofType(type).addObject(STRING_FIELD_NAME, stringValue).build();
+
+            testOrderAspect(builder -> builder.custom(customFieldsDraft),
+                    order -> assertThat(order.getCustom().getFieldAsString(STRING_FIELD_NAME)).isEqualTo(stringValue));
+
+            return type;
+        });
     }
 
     @Test
