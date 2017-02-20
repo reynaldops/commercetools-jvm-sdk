@@ -5,6 +5,7 @@ import io.sphere.sdk.channels.Channel;
 import io.sphere.sdk.models.*;
 import io.sphere.sdk.products.Price;
 import io.sphere.sdk.taxcategories.TaxRate;
+import io.sphere.sdk.types.CustomFieldsDraft;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -23,13 +24,16 @@ public final class LineItemImportDraftBuilder extends Base implements Builder<Li
     private Reference<Channel> supplyChannel;
     @Nullable
     private TaxRate taxRate;
+    @Nullable
+    private CustomFieldsDraft custom;
 
-    private LineItemImportDraftBuilder(final ProductVariantImportDraft variant, final Long quantity, final Price price, @Nullable final String productId, final LocalizedString name) {
+    private LineItemImportDraftBuilder(final ProductVariantImportDraft variant, final Long quantity, final Price price, @Nullable final String productId, final LocalizedString name, @Nullable final CustomFieldsDraft custom) {
         this.price = price;
         this.variant = variant;
         this.quantity = quantity;
         this.productId = productId;
         this.name = name;
+        this.custom = custom;
     }
 
     public LineItemImportDraftBuilder price(final Price price) {
@@ -57,12 +61,18 @@ public final class LineItemImportDraftBuilder extends Base implements Builder<Li
         return this;
     }
 
+
+    public LineItemImportDraftBuilder custom(@Nullable final CustomFieldsDraft custom) {
+        this.custom = custom;
+        return this;
+    }
+
     public static LineItemImportDraftBuilder of(final ProductVariantImportDraft variant, final long quantity, final Price price, final LocalizedString name) {
-        return new LineItemImportDraftBuilder(variant, quantity, price, variant.getProductId(), name);
+        return new LineItemImportDraftBuilder(variant, quantity, price, variant.getProductId(), name, null);
     }
 
     @Override
     public LineItemImportDraft build() {
-        return new LineItemImportDraftImpl(name, productId, variant, price, quantity, state, supplyChannel, taxRate);
+        return new LineItemImportDraftImpl(name, productId, variant, price, quantity, state, supplyChannel, taxRate, custom);
     }
 }
