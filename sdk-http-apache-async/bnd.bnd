@@ -1,0 +1,5 @@
+-exportcontents: io.sphere.sdk.http
+Bundle-Version: ${project.version}.bndqual
+Bundle-SymbolicName: ${project.groupId}.${project.artifactId}
+Fragment-Host: ${project.groupId}.sdk-http
+Import-Package: !javax.annotation.*, *
