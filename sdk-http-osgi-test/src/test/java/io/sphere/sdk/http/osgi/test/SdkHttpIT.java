@@ -14,31 +14,26 @@ import org.ops4j.pax.exam.spi.reactors.PerMethod;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertNotNull;
-import static org.ops4j.pax.exam.CoreOptions.*;
+import static io.sphere.sdk.http.osgi.test.PaxExamOptions.sdkHttpOptions;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.ops4j.pax.exam.CoreOptions.junitBundles;
+import static org.ops4j.pax.exam.CoreOptions.options;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerMethod.class)
-public class SdkInOSGiIT {
+public class SdkHttpIT {
     @Configuration
     public Option[] configure() throws IOException {
         return options(
-                url("link:classpath:org.apache.httpcomponents.httpcore.link"),
-                url("link:classpath:org.apache.httpcomponents.httpclient.link"),
-                url("link:classpath:org.apache.httpcomponents.httpasyncclient.link"),
-                url("link:classpath:org.apache.commons.io.link"),
-                url("link:classpath:org.apache.commons.lang3.link"),
-                url("link:classpath:org.jsr-305.link"),
-                url("link:classpath:com.commercetools.sdk.jvm.core.sdk-http.link").start(),
-                url("link:classpath:com.commercetools.sdk.jvm.core.sdk-http-apache-async.link").noStart(),
+                sdkHttpOptions(),
                 junitBundles()
-                );
+        );
     }
 
     @Test
     public void createApacheHttpClientAdapter() throws Exception {
         final CloseableHttpAsyncClient closeableHttpAsyncClient = HttpAsyncClients.createDefault();
         final HttpClient httpClient = ApacheHttpClientAdapter.of(closeableHttpAsyncClient);
-        assertNotNull(httpClient);
+        assertThat(httpClient).isNotNull();
     }
 }
