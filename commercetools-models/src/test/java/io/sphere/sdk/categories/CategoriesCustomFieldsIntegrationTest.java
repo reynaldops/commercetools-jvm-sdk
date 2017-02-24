@@ -21,10 +21,10 @@ import io.sphere.sdk.types.commands.TypeCreateCommand;
 import io.sphere.sdk.types.commands.TypeDeleteCommand;
 import org.junit.Test;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static io.sphere.sdk.categories.CategoryFixtures.withCategory;
 import static io.sphere.sdk.test.SphereTestUtils.*;
@@ -45,6 +45,34 @@ public class CategoriesCustomFieldsIntegrationTest extends IntegrationTest {
     @Test
     public void createCategoryWithCustomTypeByKey() {
         createCategoryWithCustomType(type -> CustomFieldsDraftBuilder.ofTypeKey(type.getKey()));
+    }
+
+    @Test
+    public void createCategoryWithCustomFieldOfSetType() {
+        withUpdateableType(client(), type -> {
+            final Set<String> stringSet = Stream.of("string1", "string2", "string3")
+                    .collect(Collectors.toCollection(LinkedHashSet::new));
+            final CustomFieldsDraft customFieldsDraft =
+                    CustomFieldsDraftBuilder.ofTypeId(type.getId()).addObject(STRING_SET_FIELD_NAME, stringSet)
+                            .build();
+            final CategoryDraft categoryDraft = CategoryDraftBuilder.of(randomSlug(), randomSlug()).custom(customFieldsDraft).build();
+            final Category category = client().executeBlocking(CategoryCreateCommand.of(categoryDraft));
+
+            assertThat(category.getCustom().getField(STRING_SET_FIELD_NAME, TypeReferences.stringSetTypeReference()))
+                    .as("Custom field of set type is ordered")
+                    .containsExactlyElementsOf(stringSet);
+
+            final Set<String> newStringSet = Stream.of("string2", "string3")
+                    .collect(Collectors.toCollection(LinkedHashSet::new));
+            final Category updatedCategory = client().executeBlocking(CategoryUpdateCommand.of(category, SetCustomField.ofObject(STRING_SET_FIELD_NAME, newStringSet)));
+
+            assertThat(updatedCategory.getCustom().getField(STRING_SET_FIELD_NAME, TypeReferences.stringSetTypeReference()))
+                    .as("Custom field of set type is ordered")
+                    .containsExactlyElementsOf(newStringSet);
+
+            client().executeBlocking(CategoryDeleteCommand.of(updatedCategory));
+            return type;
+        });
     }
 
     private void createCategoryWithCustomType(final Function<Type, CustomFieldsDraftBuilder> draftCreator) {
