@@ -2,9 +2,11 @@ package io.sphere.sdk.orders;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.sphere.sdk.annotations.ResourceValue;
 
 import javax.annotation.Nullable;
 
+@ResourceValue
 @JsonDeserialize(as = TrackingDataImpl.class)
 public interface TrackingData {
     static TrackingData of() {
@@ -12,7 +14,7 @@ public interface TrackingData {
     }
 
     static TrackingData of(final String trackingId, final String carrier, final String provider, final String providerTransaction, final boolean isReturn) {
-        return new TrackingDataImpl(trackingId, carrier, provider, providerTransaction, isReturn);
+        return new TrackingDataImpl(carrier, provider, providerTransaction, isReturn, trackingId);
     }
 
     @Nullable
