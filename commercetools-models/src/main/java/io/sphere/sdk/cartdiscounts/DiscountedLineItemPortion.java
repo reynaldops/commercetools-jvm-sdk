@@ -1,11 +1,13 @@
 package io.sphere.sdk.cartdiscounts;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.sphere.sdk.annotations.ResourceValue;
 import io.sphere.sdk.models.Reference;
 import io.sphere.sdk.models.Referenceable;
 
 import javax.money.MonetaryAmount;
 
+@ResourceValue
 @JsonDeserialize(as = DiscountedLineItemPortionImpl.class)
 public interface DiscountedLineItemPortion {
     static DiscountedLineItemPortion of(final Referenceable<CartDiscount> discount, final MonetaryAmount discountedAmount) {
