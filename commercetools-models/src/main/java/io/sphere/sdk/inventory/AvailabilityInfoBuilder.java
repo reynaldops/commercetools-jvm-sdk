@@ -37,7 +37,7 @@ public final class AvailabilityInfoBuilder extends Base implements Builder<Avail
 
     @Override
     public AvailabilityInfo build() {
-        return new AvailabilityInfoImpl(isOnStock, restockableInDays, availableQuantity);
+        return new AvailabilityInfoImpl(availableQuantity, isOnStock, restockableInDays);
     }
 
     @Nullable
