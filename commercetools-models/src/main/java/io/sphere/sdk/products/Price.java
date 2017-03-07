@@ -57,6 +57,11 @@ public interface Price extends PriceLike {
     @Override
     String getId();
 
+    /**
+     * Supplies a discount if there is any.
+     * Beware that another discount can win and in here is another discount than you expect.
+     * @return discount data
+     */
     @Nullable
     @Override
     ZonedDateTime getValidFrom();

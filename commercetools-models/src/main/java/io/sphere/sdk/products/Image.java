@@ -3,9 +3,11 @@ package io.sphere.sdk.products;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.sphere.sdk.annotations.ResourceValue;
 
 import javax.annotation.Nullable;
 
+@ResourceValue
 @JsonDeserialize(as=ImageImpl.class)
 public interface Image {
     String getUrl();
@@ -16,7 +18,7 @@ public interface Image {
     String getLabel();
 
     static Image of(final String url, final ImageDimensions dimensions, @Nullable final String label) {
-        return ImageImpl.of(url, dimensions, label);
+        return new ImageImpl(dimensions, label, url);
     }
 
     static Image ofWidthAndHeight(final String url, final Integer width, final Integer height, @Nullable final String label) {
