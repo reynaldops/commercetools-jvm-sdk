@@ -1,11 +1,13 @@
 package io.sphere.sdk.discountcodes;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.sphere.sdk.annotations.ResourceValue;
 import io.sphere.sdk.models.Reference;
 import io.sphere.sdk.models.Referenceable;
 
 import java.util.Optional;
 
+@ResourceValue
 @JsonDeserialize(as = DiscountCodeInfoImpl.class)
 public interface DiscountCodeInfo {
     Reference<DiscountCode> getDiscountCode();
