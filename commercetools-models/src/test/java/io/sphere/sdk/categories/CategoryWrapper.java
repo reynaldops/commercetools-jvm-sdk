@@ -1,7 +1,5 @@
 package io.sphere.sdk.categories;
 
-import java.time.ZonedDateTime;
-
 import io.sphere.sdk.models.Asset;
 import io.sphere.sdk.models.Base;
 import io.sphere.sdk.models.LocalizedString;
@@ -10,6 +8,7 @@ import io.sphere.sdk.types.CustomFields;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 abstract class CategoryWrapper extends Base implements Category {
