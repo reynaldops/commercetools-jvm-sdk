@@ -1,9 +1,11 @@
 package io.sphere.sdk.reviews;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.sphere.sdk.annotations.ResourceValue;
 
 import java.util.Map;
 
+@ResourceValue
 @JsonDeserialize(as = ReviewRatingStatisticsImpl.class)
 public interface ReviewRatingStatistics {
     Double getAverageRating();
