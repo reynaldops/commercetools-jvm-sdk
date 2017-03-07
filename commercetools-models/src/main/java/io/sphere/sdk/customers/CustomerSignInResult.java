@@ -2,6 +2,7 @@ package io.sphere.sdk.customers;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.sphere.sdk.annotations.ResourceValue;
 import io.sphere.sdk.carts.Cart;
 
 import javax.annotation.Nullable;
@@ -12,6 +13,7 @@ import javax.annotation.Nullable;
  * @see io.sphere.sdk.customers.commands.CustomerCreateCommand
  * @see io.sphere.sdk.customers.commands.CustomerSignInCommand
  */
+@ResourceValue
 @JsonDeserialize(as = CustomerSignInResultImpl.class)
 public interface CustomerSignInResult {
     Customer getCustomer();

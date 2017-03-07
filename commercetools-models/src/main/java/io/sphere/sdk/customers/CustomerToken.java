@@ -2,6 +2,7 @@ package io.sphere.sdk.customers;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.sphere.sdk.annotations.ResourceValue;
 import io.sphere.sdk.models.Timestamped;
 
 /**
@@ -14,6 +15,7 @@ import io.sphere.sdk.models.Timestamped;
  * @see io.sphere.sdk.customers.commands.CustomerPasswordResetCommand
  * @see io.sphere.sdk.customers.commands.CustomerVerifyEmailCommand
  */
+@ResourceValue
 @JsonDeserialize(as = CustomerTokenImpl.class)
 public interface CustomerToken extends Timestamped {
     /**
