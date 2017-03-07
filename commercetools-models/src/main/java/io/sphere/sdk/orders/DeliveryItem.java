@@ -2,6 +2,7 @@ package io.sphere.sdk.orders;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.sphere.sdk.annotations.ResourceValue;
 import io.sphere.sdk.carts.LineItemLike;
 
 /**
@@ -11,6 +12,7 @@ import io.sphere.sdk.carts.LineItemLike;
  *
  * @see io.sphere.sdk.orders.commands.updateactions.AddDelivery
  */
+@ResourceValue
 @JsonDeserialize(as = DeliveryItemImpl.class)
 public interface DeliveryItem {
     /**

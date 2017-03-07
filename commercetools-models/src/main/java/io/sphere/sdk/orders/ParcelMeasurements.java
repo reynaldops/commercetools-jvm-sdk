@@ -1,7 +1,9 @@
 package io.sphere.sdk.orders;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.sphere.sdk.annotations.ResourceValue;
 
+@ResourceValue
 @JsonDeserialize(as = ParcelMeasurementsImpl.class)
 public interface ParcelMeasurements {
     Integer getHeightInMillimeter();

@@ -1,6 +1,7 @@
 package io.sphere.sdk.orders;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.sphere.sdk.annotations.ResourceValue;
 import io.sphere.sdk.models.CreationTimestamped;
 import io.sphere.sdk.models.Identifiable;
 
@@ -13,6 +14,7 @@ import java.util.List;
  * @see io.sphere.sdk.orders.commands.updateactions.AddDelivery
  * @see io.sphere.sdk.orders.messages.DeliveryAddedMessage
  */
+@ResourceValue
 @JsonDeserialize(as = DeliveryImpl.class)
 public interface Delivery extends Identifiable<Delivery>, CreationTimestamped {
     @Override
@@ -26,6 +28,6 @@ public interface Delivery extends Identifiable<Delivery>, CreationTimestamped {
     List<Parcel> getParcels();
 
     static Delivery of(final String id, final ZonedDateTime createdAt, final List<DeliveryItem> items, final List<Parcel> parcels) {
-        return new DeliveryImpl(id, createdAt, items, parcels);
+        return new DeliveryImpl(createdAt, id, items, parcels);
     }
 }
