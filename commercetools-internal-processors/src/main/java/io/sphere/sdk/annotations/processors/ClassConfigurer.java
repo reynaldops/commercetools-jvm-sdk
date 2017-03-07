@@ -6,10 +6,10 @@ import io.sphere.sdk.annotations.ResourceDraftValue;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
 import javax.lang.model.type.DeclaredType;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.*;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -556,8 +556,8 @@ final class ClassConfigurer {
                 .collect(Collectors.toList());
     }
 
-    private static String escapeJavaKeyword(final String parameterName) {
-        return parameterName.replaceAll("^default$", "_default");
+    private static String escapeJavaKeyword(final String name) {
+        return SourceVersion.isKeyword(name) ? "_" + name: name;
     }
 
     private static FieldModel getField(final ClassModelBuilder builder, final String fieldName) {
