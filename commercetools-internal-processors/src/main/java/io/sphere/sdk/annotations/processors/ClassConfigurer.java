@@ -9,7 +9,6 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import javax.lang.model.element.*;
 import javax.lang.model.type.DeclaredType;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.*;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -344,11 +343,6 @@ final class ClassConfigurer {
             return this;
         }
 
-        public MethodsHolder buildMethod() {
-            addBuildMethod(builder, typeElement);
-            return this;
-        }
-
         public ClassModel build() {
             return builder.build();
         }
@@ -488,12 +482,20 @@ final class ClassConfigurer {
     private static void addNewBuilderMethod(final ClassModelBuilder builder, final TypeElement typeElement) {
         final MethodModel method = new MethodModel();
         method.setModifiers(singletonList("private"));
-        final String associatedBuilderName = ResourceDraftBuilderClassModelFactory.builderName(typeElement);
+        final String associatedBuilderName = builderName(typeElement);
         builder.addImport(builder.build().getPackageName() + "." + associatedBuilderName);
         method.setReturnType(associatedBuilderName);
         method.setName("newBuilder");
         method.setBody("return new " + associatedBuilderName + "(" + fieldNamesSortedString(builder) + ");");
         builder.addMethod(method);
+    }
+
+    private static String builderName(final String originalClassName) {
+        return originalClassName + "Builder";
+    }
+
+    private static String builderName(final TypeElement typeElement) {
+        return builderName(typeElement.getSimpleName().toString());
     }
 
     private static FieldModel createField(final Element element, final boolean finalFields) {
@@ -623,16 +625,6 @@ final class ClassConfigurer {
         final String template = parameter.getType().startsWith("io.sphere.sdk.models.Referenceable<") ? "referenceableBuilderMethodBody" : "builderMethodBody";
         method.setBody(Templates.render(template, values));
         return method;
-    }
-
-    private static void addBuildMethod(final ClassModelBuilder builder, final TypeElement typeElement) {
-        final MethodModel method = new MethodModel();
-        method.addModifiers("public");
-        final String dslName = ResourceDraftDslClassModelFactory.dslName(typeElement);
-        method.setReturnType(dslName);
-        method.setName("build");
-        method.setBody("return new " + dslName + "(" + fieldNamesSortedString(builder) + ");");
-        builder.addMethod(method);
     }
 
     public static String packageName(final TypeElement typeElement) {
