@@ -1,0 +1,1 @@
+file:${project.basedir}/../sdk-http-apache-async/target/sdk-http-apache-async-${project.version}.jar

@@ -1,0 +1,1 @@
+file:${project.basedir}/../sdk-http/target/sdk-http-${project.version}.jar

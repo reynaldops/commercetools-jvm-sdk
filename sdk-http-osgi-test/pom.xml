@@ -5,14 +5,14 @@
     <parent>
         <artifactId>commercetools-jvm-sdk</artifactId>
         <groupId>com.commercetools.sdk.jvm.core</groupId>
-        <version>1.11.1-SNAPSHOT</version>
+        <version>1.19.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>sdk-http-osgi-test</artifactId>
 
     <properties>
-        <pax-exam.version>4.9.1</pax-exam.version>
+        <pax-exam.version>4.11.0</pax-exam.version>
     </properties>
     <dependencies>
         <dependency>
@@ -101,14 +101,17 @@
     </dependencies>
 
     <build>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+            </testResource>
+        </testResources>
         <plugins>
             <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <includes>
-                        <include>*IT.java</include>
-                    </includes>
-                </configuration>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${maven-failsafe-plugin.version}</version>
             </plugin>
             <plugin>
                 <groupId>com.github.veithen.alta</groupId>
