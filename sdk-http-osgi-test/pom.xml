@@ -17,6 +17,12 @@
     <dependencies>
         <dependency>
             <groupId>com.commercetools.sdk.jvm.core</groupId>
+            <artifactId>commercetools-java-client-core</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.commercetools.sdk.jvm.core</groupId>
             <artifactId>sdk-http-apache-async</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>

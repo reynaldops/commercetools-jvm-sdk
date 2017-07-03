@@ -24,6 +24,8 @@ public class PaxExamOptions {
                 linkBundle("org.apache.commons.lang3"),
                 linkBundle("org.jsr-305"),
                 linkBundle("org.assertj.core"),
+                linkBundle("com.commercetools.sdk.jvm.core.commercetools-sdk-base"),
+                linkBundle("com.commercetools.sdk.jvm.core.commercetools-java-client-core"),
                 linkBundle("com.commercetools.sdk.jvm.core.sdk-http"),
                 linkBundle("com.commercetools.sdk.jvm.core.sdk-http-apache-async").noStart()
         );

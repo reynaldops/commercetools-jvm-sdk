@@ -1,0 +1,1 @@
+file:${project.basedir}/../commercetools-sdk-base/target/commercetools-sdk-base-${project.version}.jar

@@ -1,5 +1,8 @@
 package io.sphere.sdk.http.osgi.test;
 
+import io.sphere.sdk.client.SphereAccessTokenSupplier;
+import io.sphere.sdk.client.SphereApiConfig;
+import io.sphere.sdk.client.SphereClient;
 import io.sphere.sdk.http.ApacheHttpClientAdapter;
 import io.sphere.sdk.http.HttpClient;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
@@ -35,5 +38,13 @@ public class SdkHttpIT {
         final CloseableHttpAsyncClient closeableHttpAsyncClient = HttpAsyncClients.createDefault();
         final HttpClient httpClient = ApacheHttpClientAdapter.of(closeableHttpAsyncClient);
         assertThat(httpClient).isNotNull();
+    }
+
+    @Test
+    public void createSphereClient(){
+        final CloseableHttpAsyncClient closeableHttpAsyncClient = HttpAsyncClients.createDefault();
+        final HttpClient httpClient = ApacheHttpClientAdapter.of(closeableHttpAsyncClient);
+        final SphereClient sphereClient = SphereClient.of(SphereApiConfig.of("projectKey"), httpClient, SphereAccessTokenSupplier.ofConstantToken("accessToken"));
+        assertThat(sphereClient).isNotNull();
     }
 }

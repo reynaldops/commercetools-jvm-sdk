@@ -1,0 +1,4 @@
+-exportcontents: io.sphere.sdk.client.*
+Bundle-Version: ${project.version}.bndqual
+Bundle-SymbolicName: ${project.groupId}.${project.artifactId}
+Import-Package: !com.fasterxml.jackson.*, !com.neovisionaries.*, !javax.annotation.*, !org.javamoney.*, !javax.money.*, *

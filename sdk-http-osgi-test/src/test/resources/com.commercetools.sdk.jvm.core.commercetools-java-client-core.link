@@ -1,0 +1,1 @@
+file:${project.basedir}/../commercetools-java-client-core/target/commercetools-java-client-core-${project.version}.jar
