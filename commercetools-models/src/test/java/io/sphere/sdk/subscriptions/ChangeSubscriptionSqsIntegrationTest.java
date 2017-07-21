@@ -33,8 +33,6 @@ public class ChangeSubscriptionSqsIntegrationTest extends SqsIntegrationTest {
                 assertThat(sqsMessages).hasSize(1);
 
                 final Message sqsMessage = sqsMessages.get(0);
-                sqsClient.deleteMessage(queueUrl, sqsMessage.getReceiptHandle());
-
                 final ResourceCreatedPayload<Product> resourceCreatedPayload =
                         SphereJsonUtils.readObject(sqsMessage.getBody(), ResourceCreatedPayload.class);
                 assertThat(resourceCreatedPayload).isNotNull();
